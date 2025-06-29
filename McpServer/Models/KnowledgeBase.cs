@@ -59,10 +59,9 @@ public class KnowledgeBaseCategoryEditViewModel
     public int Order { get; set; }
 }
 
-// Placeholder for KnowledgeBaseTags - referenced in KnowledgeBase but not defined in our models
 public class KnowledgeBaseTags
 {
     public Guid Id { get; set; }
     public string? Name { get; set; }
-    public string? Color { get; set; }
+    public List<KnowledgeBase>? Notes { get; set; }
 }

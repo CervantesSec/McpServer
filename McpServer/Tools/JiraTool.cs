@@ -92,6 +92,7 @@ public class JiraTool
     public async Task<JiraComments?> AddJiraCommentAsync(
         [Description("JIRA issue ID")] Guid jiraId,
         [Description("Comment body")] string body,
+        [Description("JIRA comment ID")] string? jiraIdComment = null,
         [Description("Comment author")] string? author = null,
         [Description("Group level restriction")] string? groupLevel = null,
         [Description("Role level restriction")] string? roleLevel = null,
@@ -102,8 +103,9 @@ public class JiraTool
         var commentData = new JiraCreateCommentViewModel
         {
             JiraId = jiraId,
-            Body = body,
+            JiraIdComment = jiraIdComment,
             Author = author,
+            Body = body,
             GroupLevel = groupLevel,
             RoleLevel = roleLevel
         };

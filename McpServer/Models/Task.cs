@@ -49,23 +49,8 @@ public class Task
 
 public class TaskCreateViewModel
 {
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
-    
-    [JsonPropertyName("description")]
-    public string? Description { get; set; }
-    
-    [JsonPropertyName("startDate")]
-    public DateTime StartDate { get; set; }
-    
-    [JsonPropertyName("endDate")]
-    public DateTime? EndDate { get; set; }
-    
-    [JsonPropertyName("status")]
-    public TaskStatus Status { get; set; }
-    
-    [JsonPropertyName("template")]
-    public bool Template { get; set; }
+    [JsonPropertyName("createdUserId")]
+    public string? CreatedUserId { get; set; }
     
     [JsonPropertyName("asignedUserId")]
     public string? AsignedUserId { get; set; }
@@ -73,8 +58,20 @@ public class TaskCreateViewModel
     [JsonPropertyName("projectId")]
     public Guid? ProjectId { get; set; }
     
-    [JsonPropertyName("clientId")]
-    public Guid? ClientId { get; set; }
+    [JsonPropertyName("startDate")]
+    public DateTime StartDate { get; set; }
+    
+    [JsonPropertyName("endDate")]
+    public DateTime EndDate { get; set; }
+    
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+    
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+    
+    [JsonPropertyName("status")]
+    public TaskStatus Status { get; set; }
 }
 
 public class TaskUpdateViewModel
@@ -82,23 +79,17 @@ public class TaskUpdateViewModel
     [JsonPropertyName("id")]
     public Guid Id { get; set; }
     
-    [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
-    
-    [JsonPropertyName("description")]
-    public string? Description { get; set; }
-    
-    [JsonPropertyName("startDate")]
-    public DateTime StartDate { get; set; }
-    
-    [JsonPropertyName("endDate")]
-    public DateTime? EndDate { get; set; }
-    
     [JsonPropertyName("status")]
     public TaskStatus Status { get; set; }
+}
+
+public class TaskEditViewModel
+{
+    [JsonPropertyName("id")]
+    public Guid Id { get; set; }
     
-    [JsonPropertyName("template")]
-    public bool Template { get; set; }
+    [JsonPropertyName("createdUserId")]
+    public string? CreatedUserId { get; set; }
     
     [JsonPropertyName("asignedUserId")]
     public string? AsignedUserId { get; set; }
@@ -106,8 +97,20 @@ public class TaskUpdateViewModel
     [JsonPropertyName("projectId")]
     public Guid? ProjectId { get; set; }
     
-    [JsonPropertyName("clientId")]
-    public Guid? ClientId { get; set; }
+    [JsonPropertyName("startDate")]
+    public DateTime StartDate { get; set; }
+    
+    [JsonPropertyName("endDate")]
+    public DateTime EndDate { get; set; }
+    
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+    
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+    
+    [JsonPropertyName("status")]
+    public TaskStatus Status { get; set; }
 }
 
 public class TaskNoteViewModel

@@ -43,9 +43,25 @@ public class ClientTool
         [Description("Contact person name")] string? contactName = null,
         [Description("Contact email")] string? contactEmail = null,
         [Description("Contact phone")] string? contactPhone = null,
+        [Description("File name for client logo/image")] string? fileName = null,
+        [Description("File content as base64 string")] string? fileContentBase64 = null,
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating new client: {ClientName}", name);
+        
+        byte[]? fileContent = null;
+        if (!string.IsNullOrEmpty(fileContentBase64))
+        {
+            try
+            {
+                fileContent = Convert.FromBase64String(fileContentBase64);
+            }
+            catch (FormatException ex)
+            {
+                _logger.LogError(ex, "Invalid base64 format for file content");
+                throw new ArgumentException("Invalid base64 format for file content", nameof(fileContentBase64));
+            }
+        }
         
         var clientData = new ClientCreateViewModel
         {
@@ -54,7 +70,9 @@ public class ClientTool
             Url = url,
             ContactName = contactName,
             ContactEmail = contactEmail,
-            ContactPhone = contactPhone
+            ContactPhone = contactPhone,
+            FileName = fileName,
+            FileContent = fileContent
         };
 
         return await _apiClient.PostAsync<ClientCreateViewModel, Client>("api/Clients", clientData, cancellationToken);
@@ -69,9 +87,25 @@ public class ClientTool
         [Description("Contact person name")] string? contactName = null,
         [Description("Contact email")] string? contactEmail = null,
         [Description("Contact phone")] string? contactPhone = null,
+        [Description("File name for client logo/image")] string? fileName = null,
+        [Description("File content as base64 string")] string? fileContentBase64 = null,
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Updating client: {ClientId}", id);
+        
+        byte[]? fileContent = null;
+        if (!string.IsNullOrEmpty(fileContentBase64))
+        {
+            try
+            {
+                fileContent = Convert.FromBase64String(fileContentBase64);
+            }
+            catch (FormatException ex)
+            {
+                _logger.LogError(ex, "Invalid base64 format for file content");
+                throw new ArgumentException("Invalid base64 format for file content", nameof(fileContentBase64));
+            }
+        }
         
         var clientData = new ClientEditViewModel
         {
@@ -81,7 +115,9 @@ public class ClientTool
             Url = url,
             ContactName = contactName,
             ContactEmail = contactEmail,
-            ContactPhone = contactPhone
+            ContactPhone = contactPhone,
+            FileName = fileName,
+            FileContent = fileContent
         };
 
         return await _apiClient.PutAsync<ClientEditViewModel, Client>("api/Clients", clientData, cancellationToken);

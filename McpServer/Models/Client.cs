@@ -54,6 +54,12 @@ public class ClientCreateViewModel
     
     [JsonPropertyName("contactPhone")]
     public string? ContactPhone { get; set; }
+    
+    [JsonPropertyName("fileName")]
+    public string? FileName { get; set; }
+    
+    [JsonPropertyName("fileContent")]
+    public byte[]? FileContent { get; set; }
 }
 
 public class ClientEditViewModel : ClientCreateViewModel

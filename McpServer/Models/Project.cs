@@ -81,6 +81,15 @@ public class ProjectCreateViewModel
     
     [JsonPropertyName("clientId")]
     public Guid ClientId { get; set; }
+    
+    [JsonPropertyName("score")]
+    public Score Score { get; set; }
+    
+    [JsonPropertyName("findingsId")]
+    public string? FindingsId { get; set; }
+    
+    [JsonPropertyName("businessImpact")]
+    public int BusinessImpact { get; set; }
 }
 
 public class ProjectEditViewModel : ProjectCreateViewModel
@@ -109,4 +118,10 @@ public enum Language
 {
     English = 0,
     Español = 1
+}
+
+public enum Score
+{
+    Low = 0,
+    High = 1
 }

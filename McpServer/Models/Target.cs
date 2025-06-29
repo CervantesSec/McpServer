@@ -42,6 +42,30 @@ public class TargetCreateViewModel
     
     [JsonPropertyName("projectId")]
     public Guid ProjectId { get; set; }
+    
+    [JsonPropertyName("userId")]
+    public string? UserId { get; set; }
+}
+
+public class TargetEditViewModel
+{
+    [JsonPropertyName("id")]
+    public Guid Id { get; set; }
+    
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+    
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+    
+    [JsonPropertyName("type")]
+    public TargetType Type { get; set; }
+    
+    [JsonPropertyName("userId")]
+    public string? UserId { get; set; }
+    
+    [JsonPropertyName("projectId")]
+    public Guid? ProjectId { get; set; }
 }
 
 public class TargetServices

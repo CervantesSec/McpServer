@@ -37,15 +37,14 @@ public class TaskTool
 
     [McpServerTool, Description("Create a new task")]
     public async Task<Models.Task?> CreateTaskAsync(
-        [Description("Task name")] string name,
+        [Description("Task name")] string? name = null,
         [Description("Task description")] string? description = null,
         [Description("Start date (ISO 8601)")] string? startDate = null,
         [Description("End date (ISO 8601)")] string? endDate = null,
         [Description("Status (0=Waiting, 1=InProgress, 2=Blocked, 3=Ready, 4=Completed)")] int status = 0,
-        [Description("Is template")] bool template = false,
+        [Description("Created user ID")] string? createdUserId = null,
         [Description("Assigned user ID")] string? assignedUserId = null,
         [Description("Project ID")] Guid? projectId = null,
-        [Description("Client ID")] Guid? clientId = null,
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating new task: {TaskName}", name);
@@ -56,19 +55,18 @@ public class TaskTool
             
         var endDateTime = !string.IsNullOrEmpty(endDate) 
             ? DateTime.Parse(endDate) 
-            : (DateTime?)null;
+            : DateTime.UtcNow;
 
         var taskData = new TaskCreateViewModel
         {
-            Name = name,
-            Description = description,
-            StartDate = startDateTime,
-            EndDate = endDateTime,
-            Status = (Models.TaskStatus)status,
-            Template = template,
+            CreatedUserId = createdUserId,
             AsignedUserId = assignedUserId,
             ProjectId = projectId,
-            ClientId = clientId
+            StartDate = startDateTime,
+            EndDate = endDateTime,
+            Name = name,
+            Description = description,
+            Status = (Models.TaskStatus)status
         };
 
         return await _apiClient.PostAsync<TaskCreateViewModel, Models.Task>("api/Task", taskData, cancellationToken);
@@ -113,21 +111,37 @@ public class TaskTool
         return tasks ?? new List<Models.Task>();
     }
 
-    [McpServerTool, Description("Update an existing task")]
+    [McpServerTool, Description("Update an existing task status")]
     public async Task<Models.Task?> UpdateTaskAsync(
         [Description("Task ID")] Guid id,
-        [Description("Task name")] string name,
+        [Description("Status (0=Waiting, 1=InProgress, 2=Blocked, 3=Ready, 4=Completed)")] int status = 0,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation("Updating task: {TaskId}", id);
+
+        var taskData = new TaskUpdateViewModel
+        {
+            Id = id,
+            Status = (Models.TaskStatus)status
+        };
+
+        return await _apiClient.PostAsync<TaskUpdateViewModel, Models.Task>("api/Task/Update", taskData, cancellationToken);
+    }
+
+    [McpServerTool, Description("Edit a task with full details")]
+    public async Task<Models.Task?> EditTaskAsync(
+        [Description("Task ID")] Guid id,
+        [Description("Task name")] string? name = null,
         [Description("Task description")] string? description = null,
         [Description("Start date (ISO 8601)")] string? startDate = null,
         [Description("End date (ISO 8601)")] string? endDate = null,
         [Description("Status (0=Waiting, 1=InProgress, 2=Blocked, 3=Ready, 4=Completed)")] int status = 0,
-        [Description("Is template")] bool template = false,
+        [Description("Created user ID")] string? createdUserId = null,
         [Description("Assigned user ID")] string? assignedUserId = null,
         [Description("Project ID")] Guid? projectId = null,
-        [Description("Client ID")] Guid? clientId = null,
         CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Updating task: {TaskId}", id);
+        _logger.LogInformation("Editing task: {TaskId}", id);
         
         var startDateTime = !string.IsNullOrEmpty(startDate) 
             ? DateTime.Parse(startDate) 
@@ -135,23 +149,22 @@ public class TaskTool
             
         var endDateTime = !string.IsNullOrEmpty(endDate) 
             ? DateTime.Parse(endDate) 
-            : (DateTime?)null;
+            : DateTime.UtcNow;
 
-        var taskData = new TaskUpdateViewModel
+        var taskData = new TaskEditViewModel
         {
             Id = id,
-            Name = name,
-            Description = description,
-            StartDate = startDateTime,
-            EndDate = endDateTime,
-            Status = (Models.TaskStatus)status,
-            Template = template,
+            CreatedUserId = createdUserId,
             AsignedUserId = assignedUserId,
             ProjectId = projectId,
-            ClientId = clientId
+            StartDate = startDateTime,
+            EndDate = endDateTime,
+            Name = name,
+            Description = description,
+            Status = (Models.TaskStatus)status
         };
 
-        return await _apiClient.PostAsync<TaskUpdateViewModel, Models.Task>("api/Task/Update", taskData, cancellationToken);
+        return await _apiClient.PutAsync<TaskEditViewModel, Models.Task>("api/Task", taskData, cancellationToken);
     }
 
     // Task Notes Management

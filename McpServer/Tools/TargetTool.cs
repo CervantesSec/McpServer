@@ -41,6 +41,7 @@ public class TargetTool
         [Description("Project ID")] Guid projectId,
         [Description("Target type (0=Domain, 1=Ip, 2=Binary, 3=CIDR, 4=Hostname)")] int type,
         [Description("Target description")] string? description = null,
+        [Description("User ID")] string? userId = null,
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating new target: {TargetName}", name);
@@ -50,10 +51,36 @@ public class TargetTool
             Name = name,
             Description = description,
             Type = (TargetType)type,
-            ProjectId = projectId
+            ProjectId = projectId,
+            UserId = userId
         };
 
         return await _apiClient.PostAsync<TargetCreateViewModel, Target>("api/Target", targetData, cancellationToken);
+    }
+
+    [McpServerTool, Description("Update an existing target")]
+    public async Task<Target?> UpdateTargetAsync(
+        [Description("Target ID")] Guid id,
+        [Description("Target name")] string? name = null,
+        [Description("Target description")] string? description = null,
+        [Description("Target type (0=Domain, 1=Ip, 2=Binary, 3=CIDR, 4=Hostname)")] int type = 0,
+        [Description("User ID")] string? userId = null,
+        [Description("Project ID")] Guid? projectId = null,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation("Updating target: {TargetId}", id);
+        
+        var targetData = new TargetEditViewModel
+        {
+            Id = id,
+            Name = name,
+            Description = description,
+            Type = (TargetType)type,
+            UserId = userId,
+            ProjectId = projectId
+        };
+
+        return await _apiClient.PutAsync<TargetEditViewModel, Target>("api/Target", targetData, cancellationToken);
     }
 
     [McpServerTool, Description("Delete a target")]

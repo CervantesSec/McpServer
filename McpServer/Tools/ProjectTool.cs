@@ -46,6 +46,9 @@ public class ProjectTool
         [Description("Project status (0=Archived, 1=Active, 2=Waiting)")] int status = 1,
         [Description("Project type (0=Internal, 1=External)")] int projectType = 1,
         [Description("Project language (0=English, 1=Español)")] int language = 0,
+        [Description("Project score (0=Low, 1=High)")] int score = 0,
+        [Description("Findings ID")] string? findingsId = null,
+        [Description("Business impact")] int businessImpact = 0,
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating new project: {ProjectName}", name);
@@ -68,7 +71,10 @@ public class ProjectTool
             Status = (ProjectStatus)status,
             ProjectType = (ProjectType)projectType,
             Language = (Language)language,
-            ClientId = clientId
+            ClientId = clientId,
+            Score = (Score)score,
+            FindingsId = findingsId,
+            BusinessImpact = businessImpact
         };
 
         return await _apiClient.PostAsync<ProjectCreateViewModel, Project>("api/Project", projectData, cancellationToken);
@@ -86,6 +92,9 @@ public class ProjectTool
         [Description("Project status (0=Archived, 1=Active, 2=Waiting)")] int status = 1,
         [Description("Project type (0=Internal, 1=External)")] int projectType = 1,
         [Description("Project language (0=English, 1=Español)")] int language = 0,
+        [Description("Project score (0=Low, 1=High)")] int score = 0,
+        [Description("Findings ID")] string? findingsId = null,
+        [Description("Business impact")] int businessImpact = 0,
         [Description("Executive summary")] string? executiveSummary = null,
         CancellationToken cancellationToken = default)
     {
@@ -111,6 +120,9 @@ public class ProjectTool
             ProjectType = (ProjectType)projectType,
             Language = (Language)language,
             ClientId = clientId,
+            Score = (Score)score,
+            FindingsId = findingsId,
+            BusinessImpact = businessImpact,
             ExecutiveSummary = executiveSummary
         };
 
