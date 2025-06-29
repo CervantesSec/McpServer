@@ -17,15 +17,41 @@ class Program
         var builder = Host.CreateApplicationBuilder(args);
         
         // Configuration
+        // Search for appsettings.json in development and production locations
+        var baseDirectory = AppContext.BaseDirectory;
+        var configFile = "appsettings.json";
+        
+        // Check if we're running from bin/Debug or bin/Release (development)
+        string configPath;
+        if (baseDirectory.Contains("bin"))
+        {
+            // Go up 3 levels from bin/Debug/net9.0 to project root
+            var projectRoot = Path.GetFullPath(Path.Combine(baseDirectory, "..", "..", ".."));
+            configPath = Path.Combine(projectRoot, configFile);
+        }
+        else
+        {
+            // Production: config file should be in the same directory as the executable
+            configPath = Path.Combine(baseDirectory, configFile);
+        }
+
+        if (!File.Exists(configPath))
+        {
+            throw new FileNotFoundException($"Configuration file '{configFile}' not found at: {configPath}");
+        }
+
         builder.Configuration
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .SetBasePath(Path.GetDirectoryName(configPath)!)
+            .AddJsonFile(Path.GetFileName(configPath), optional: false, reloadOnChange: true)
             .AddEnvironmentVariables()
             .AddCommandLine(args);
 
         builder.Services.Configure<CervantesConfiguration>(
             builder.Configuration.GetSection(CervantesConfiguration.SectionName));
 
+        // Disable console logging for MCP
+        builder.Logging.ClearProviders();
+        
         // HTTP Client and Services
         builder.Services.AddHttpClient<CervantesApiClient>();
         builder.Services.AddSingleton<CervantesApiClient>();
@@ -54,17 +80,6 @@ class Program
 
         var host = builder.Build();
         
-        var logger = host.Services.GetRequiredService<ILogger<Program>>();
-        logger.LogInformation("Starting Cervantes MCP Server...");
-        
-        try
-        {
-            await host.RunAsync();
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "An error occurred while running the MCP server");
-            throw;
-        }
+        await host.RunAsync();
     }
 }
